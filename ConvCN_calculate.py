@@ -32,6 +32,7 @@ parser.add_argument("--papers_num", default=12390, type=int, help="论文数量�
 parser.add_argument("--alpha-pr", default=0.65, type=float, help="alpha in paper rank")
 parser.add_argument("--useConstantInit", action='store_true')
 parser.add_argument("--decode", action='store_false')
+parser.add_argument("--per", default=0, type=int, help="每per个测试项就输出已得到的分数")
 
 args = parser.parse_args()
 
@@ -108,8 +109,9 @@ def predict_score(x_batch):
 print('start calculate convcn score')
 
 all_convcn_score = {}
-
-for p in tqdm.tqdm(test_papers.keys(), total=len(test_papers)):
+last = 0
+# 计算每篇测试论文对候选(训练)论文的convcn_score，存储于all_convcn_score
+for cur, p in tqdm.tqdm(enumerate(test_papers.keys()), total=len(test_papers)):
     citing_id = test_papers[p].id
     cited_ids = test_papers[p].test_cited_paper
     # triplets = np.ones((len(id2entity),3))
@@ -127,9 +129,14 @@ for p in tqdm.tqdm(test_papers.keys(), total=len(test_papers)):
     combined_score = {}  # ensemble score... ConvCN-PR分数
     for i in range(min(len(triplets), args.papers_num)):
         score_dict[triplets[i, 2]] = score[i][0]  # 存储每篇论文的ConvCv得分，结构为{pid: score,...}
-
     all_convcn_score[p] = score_dict
+    if cur % args.per == args.per-1:
+        # 每per轮存一次all_convcn_score的结果
+        with open('convcn_score/' + args.name + "_fold" + args.fold + "_" + last + "to" + str(cur+1) + '.pkl', 'wb') as f:
+            pickle.dump(all_convcn_score, f)
+        last = cur+1
+        all_convcn_score = {}
 
 # 4. 存储convcn分数
-with open('convcn_score/' + args.name + "_fold" + args.fold + f'alpha={args.alpha_pr}' + '.pkl', 'wb') as f:
+with open('convcn_score/' + args.name + "_fold" + args.fold + "_" + last + "to" + cur + '.pkl', 'wb') as f:
     pickle.dump(all_convcn_score, f)

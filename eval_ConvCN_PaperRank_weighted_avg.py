@@ -17,18 +17,6 @@ from metrics import Metrics
 import pickle
 from Paper import Paper
 
-class Paper:
-    def __init__(self, id):
-        self.id = id
-        self.test_cited_paper = []
-        self.train_cited_paper = []
-
-    def add_test_cited_paper(self, cited_paper_id):
-        self.test_cited_paper.append(cited_paper_id)
-
-    def add_train_cited_paper(self, cited_paper_id):
-        self.train_cited_paper.append(cited_paper_id)
-
 
 # Parameters
 # ==================================================
@@ -215,8 +203,8 @@ print('load model finished')
 
 all_PaperRank_score = {}
 
-# with open('PaperRank_score/' + args.name + "_fold" + args.fold + f'alpha={args.alpha_pr}' + '.pkl', 'rb') as f:
-#     all_PaperRank_score = pickle.load(f)  # 一个字典结构，存储格式为 {test_paper: {id: score, ...}...}
+with open('PaperRank_score/' + args.name + "_fold" + args.fold + f'alpha={args.alpha_pr}' + '.pkl', 'rb') as f:
+    all_PaperRank_score = pickle.load(f)  # 一个字典结构，存储格式为 {test_paper: {id: score, ...}...}
 
 # print(f"219[ 0: {all_PaperRank_score[219][0]}, 1 {all_PaperRank_score[219][1]} ]")
 # print(all_PaperRank_score)
