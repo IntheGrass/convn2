@@ -28,7 +28,7 @@ parser.add_argument("--dpo2", action='store_true', help="use dropout in CNN2")
 parser.add_argument("--bn1", action='store_true', help="use batch normalization in CNN1")
 parser.add_argument("--bn2", action='store_true', help="use batch normalization in CNN1")
 parser.add_argument("--alpha", default=0.8, type=float, help="PaperRank分数的占比，在[0.0, 1.0]之间")
-parser.add_argument("--papers_num", default=13426, type=int, help="论文数量，指定实际待排序节点的id范围")
+parser.add_argument("--papers_num", default=12390, type=int, help="论文数量，指定实际待排序节点的id范围")
 parser.add_argument("--alpha-pr", default=0.65, type=float, help="alpha in paper rank")
 parser.add_argument("--useConstantInit", action='store_true')
 parser.add_argument("--decode", action='store_false')
@@ -131,5 +131,5 @@ for p in tqdm.tqdm(test_papers.keys(), total=len(test_papers)):
     all_convcn_score[p] = score_dict
 
 # 4. 存储convcn分数
-with open('convcn_score/' + args.name + "_fold" + args.fold + f'alpha={args.alpha_pr}' + '.pkl', 'rb') as f:
+with open('convcn_score/' + args.name + "_fold" + args.fold + f'alpha={args.alpha_pr}' + '.pkl', 'wb') as f:
     pickle.dump(all_convcn_score, f)
