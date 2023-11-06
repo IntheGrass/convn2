@@ -120,7 +120,7 @@ for p in tqdm.tqdm(test_papers.keys(), total=len(test_papers)):
     # del_idx.append(citing_id)
     triplets = np.delete(triplets, del_idx, axis=0)
     triplets = triplets.astype(int)
-    score = predict_score(triplets)  # 计算ConvCN分数
+    score = predict_score(triplets[:args.papers_num])  # 计算ConvCN分数
     score = 1 - ((score - np.min(score)) / np.ptp(score))  # 1 - normalized score
 
     score_dict = {}  # score of CNN
