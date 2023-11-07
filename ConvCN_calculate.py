@@ -143,5 +143,5 @@ for cur, p in tqdm.tqdm(enumerate(test_keys), total=len(test_keys)):
         all_convcn_score.clear()  # 清空内存
 
 # 4. 存储convcn分数
-with open('convcn_score/' + args.name + "_fold" + args.fold + "_" + str(last) + "to" + cur + '.pkl', 'wb') as f:
+with open('convcn_score/' + args.name + "_fold" + args.fold + "_" + str(last) + "to" + str(cur) + '.pkl', 'wb') as f:
     pickle.dump(all_convcn_score, f)
