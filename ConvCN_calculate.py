@@ -110,8 +110,9 @@ print('start calculate convcn score')
 
 all_convcn_score = {}
 last = 0
+test_keys = sorted(test_papers.keys())  # 排序后的test_keys，确保每次遍历顺序相同
 # 计算每篇测试论文对候选(训练)论文的convcn_score，存储于all_convcn_score
-for cur, p in tqdm.tqdm(enumerate(test_papers.keys()), total=len(test_papers)):
+for cur, p in tqdm.tqdm(enumerate(test_keys), total=len(test_papers)):
     citing_id = test_papers[p].id
     cited_ids = test_papers[p].test_cited_paper
     # triplets = np.ones((len(id2entity),3))
