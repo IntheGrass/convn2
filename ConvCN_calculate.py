@@ -5,6 +5,7 @@ from builddata import *
 import tqdm
 import pickle
 from Paper import Paper
+import json
 
 parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter, conflict_handler='resolve')
 
@@ -133,9 +134,12 @@ for cur, p in tqdm.tqdm(enumerate(test_keys), total=len(test_papers)):
     all_convcn_score[p] = score_dict
     if cur % args.per == args.per-1:
         # 每per轮存一次all_convcn_score的结果
-        print(f"output sore file {cur}")
-        with open('convcn_score/' + args.name + "_fold" + args.fold + "_" + str(last) + "to" + str(cur+1) + '.pkl', 'wb') as f:
-            pickle.dump(all_convcn_score, f)
+        print(f"output sore file {cur}...\n")
+        # with open('convcn_score/' + args.name + "_fold" + args.fold + "_" + str(last) + "to" + str(cur+1) + '.pkl', 'wb') as f:
+        #     pickle.dump(all_convcn_score, f)
+        with open('convcn_score/' + args.name + "_fold" + args.fold + "_" + str(last) + "to" + str(cur+1) + '.json', 'w') as f:
+            json.dump(all_convcn_score, f)
+        print(f"finish output {cur}\n")
         last = cur+1
         all_convcn_score.clear()  # 清空内存
 
