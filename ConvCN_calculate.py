@@ -11,6 +11,7 @@ parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter, conflict_
 
 parser.add_argument("--data", default="./data/", help="Data sources.")
 parser.add_argument("--name", default="aan", help="Name of the dataset.")
+parser.add_argument("--start", default=0, type=int, help="从第n篇测试论文开始评估，用于断点续传")
 parser.add_argument("--model_name", default='expNoName', help="")
 parser.add_argument("--embedding_dim", default=50, type=int, help="Dimensionality of character embedding")
 parser.add_argument("--ConvL1FiltersNum", default=250, type=int, help="number of filter in convolution layer 1")
@@ -113,7 +114,7 @@ all_convcn_score = {}
 last = 0
 test_keys = sorted(test_papers.keys())  # 排序后的test_keys，确保每次遍历顺序相同
 # 计算每篇测试论文对候选(训练)论文的convcn_score，存储于all_convcn_score
-for cur, p in tqdm.tqdm(enumerate(test_keys), total=len(test_papers)):
+for cur, p in tqdm.tqdm(enumerate(test_keys[args.start:]), total=len(test_papers[args.start:])):
     citing_id = test_papers[p].id
     cited_ids = test_papers[p].test_cited_paper
     # triplets = np.ones((len(id2entity),3))
@@ -135,10 +136,8 @@ for cur, p in tqdm.tqdm(enumerate(test_keys), total=len(test_papers)):
     if cur % args.per == args.per-1:
         # 每per轮存一次all_convcn_score的结果
         print(f"output sore file {cur}...\n")
-        # with open('convcn_score/' + args.name + "_fold" + args.fold + "_" + str(last) + "to" + str(cur+1) + '.pkl', 'wb') as f:
-        #     pickle.dump(all_convcn_score, f)
-        with open('convcn_score/' + args.name + "_fold" + args.fold + "_" + str(last) + "to" + str(cur+1) + '.json', 'w') as f:
-            json.dump(all_convcn_score, f)
+        with open('convcn_score/' + args.name + "_fold" + args.fold + "_" + str(last) + "to" + str(cur+1) + '.pkl', 'wb') as f:
+            pickle.dump(all_convcn_score, f)
         print(f"finish output {cur}\n")
         last = cur+1
         all_convcn_score.clear()  # 清空内存
