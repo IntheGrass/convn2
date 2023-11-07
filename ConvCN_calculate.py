@@ -132,10 +132,11 @@ for cur, p in tqdm.tqdm(enumerate(test_papers.keys()), total=len(test_papers)):
     all_convcn_score[p] = score_dict
     if cur % args.per == args.per-1:
         # 每per轮存一次all_convcn_score的结果
+        print(f"output sore file {cur}")
         with open('convcn_score/' + args.name + "_fold" + args.fold + "_" + str(last) + "to" + str(cur+1) + '.pkl', 'wb') as f:
             pickle.dump(all_convcn_score, f)
         last = cur+1
-        all_convcn_score = {}
+        all_convcn_score.clear()  # 清空内存
 
 # 4. 存储convcn分数
 with open('convcn_score/' + args.name + "_fold" + args.fold + "_" + str(last) + "to" + cur + '.pkl', 'wb') as f:
